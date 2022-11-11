@@ -1,4 +1,3 @@
-import { Link } from "@remix-run/react";
 import styled from '@emotion/styled';
 import { useOptionalUser } from "~/utils";
 
@@ -10,7 +9,7 @@ export default function Index() {
   const user = useOptionalUser();
   return (
     <Main className="">
-      hello { user?.email }
+      hello { user?.email ?? 'Stranger' }
     </Main>
   );
 }

@@ -8,12 +8,12 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-
+import styled from '@emotion/styled';
 import { getUser } from "./session.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Remix Notes",
+  title: "WatchList 📺",
   viewport: "width=device-width,initial-scale=1",
 });
 
@@ -23,6 +23,10 @@ export async function loader({ request }: LoaderArgs) {
   });
 }
 
+const Body = styled.body`
+  background: red;
+`;
+
 export default function App() {
   return (
     <html lang="en" className="h-full">
@@ -30,12 +34,12 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
+      <Body>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-      </body>
+      </Body>
     </html>
   );
 }
