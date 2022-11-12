@@ -6,6 +6,7 @@ import { CacheProvider } from "@emotion/react";
 
 import createEmotionCache from "./styles/createEmotionCache";
 import ClientStyleContext from "./styles/client.context";
+import { I18nClientProvider, initI18nextClient } from "./integrations/i18n";
 
 interface ClientCacheProviderProps {
   children: React.ReactNode;
@@ -30,17 +31,13 @@ const hydrate = () => {
       document,
       <StrictMode>
         <ClientCacheProvider>
-          <RemixBrowser />
+          <I18nClientProvider>
+            <RemixBrowser />
+          </I18nClientProvider>
         </ClientCacheProvider>
       </StrictMode>
     );
   });
 };
 
-if (window.requestIdleCallback) {
-  window.requestIdleCallback(hydrate);
-} else {
-  // Safari doesn't support requestIdleCallback
-  // https://caniuse.com/requestidlecallback
-  window.setTimeout(hydrate, 1);
-}
+initI18nextClient(hydrate);

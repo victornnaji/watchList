@@ -8,6 +8,8 @@ import createEmotionServer from "@emotion/server/create-instance";
 import createEmotionCache from "./styles/createEmotionCache";
 import ServerStyleContext from "./styles/server.context";
 import { CacheProvider } from "@emotion/react";
+import { I18nextProvider } from "react-i18next";
+import { createI18nextServerInstance } from "./integrations/i18n";
 
 const ABORT_DELAY = 5000;
 
@@ -24,8 +26,10 @@ export default function handleRequest(
   const cache = createEmotionCache();
   const { extractCriticalToChunks } = createEmotionServer(cache);
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     let didError = false;
+
+    const instance = await createI18nextServerInstance(request, remixContext);
 
     const html = renderToString(
       <ServerStyleContext.Provider value={null}>
@@ -38,11 +42,13 @@ export default function handleRequest(
     const chunks = extractCriticalToChunks(html);
 
     const { pipe, abort } = renderToPipeableStream(
-      <ServerStyleContext.Provider value={chunks.styles}>
-        <CacheProvider value={cache}>
-          <RemixServer context={remixContext} url={request.url} />
-        </CacheProvider>
-      </ServerStyleContext.Provider>,
+      <I18nextProvider i18n={instance}>
+        <ServerStyleContext.Provider value={chunks.styles}>
+          <CacheProvider value={cache}>
+            <RemixServer context={remixContext} url={request.url} />
+          </CacheProvider>
+        </ServerStyleContext.Provider>
+      </I18nextProvider>,
       {
         [callbackName]: () => {
           const body = new PassThrough();
