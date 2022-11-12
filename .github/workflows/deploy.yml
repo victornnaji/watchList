@@ -1,9 +1,10 @@
 name: 🚀 Deploy
 on:
-  push:
-    branches:
-      - main
-      - dev
+  # we do not want to deploy yet
+  # push:
+  #   branches:
+  #     - main
+  #     - dev
   pull_request: {}
 
 permissions:
