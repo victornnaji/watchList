@@ -7,7 +7,7 @@ import { initReactI18next } from "react-i18next";
 import { RemixI18Next } from "remix-i18next";
 
 import { config } from "./config";
-import { i18nCookie } from "./cookie";
+import { i18nCookie } from "../cookie";
 
 export const i18nextServer = new RemixI18Next({
   detection: {

@@ -1,4 +1,4 @@
-import { validateEmail } from "./utils";
+import { isConcentRequired, validateEmail } from "./utils";
 
 test("validateEmail returns false for non-emails", () => {
   expect(validateEmail(undefined)).toBe(false);
@@ -11,3 +11,7 @@ test("validateEmail returns false for non-emails", () => {
 test("validateEmail returns true for emails", () => {
   expect(validateEmail("kody@example.com")).toBe(true);
 });
+
+test('would detect user from eu timezone', () => { 
+ //TODO
+})

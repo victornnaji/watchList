@@ -1,7 +1,12 @@
 import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
-
+import dayjs from 'dayjs'
 import type { User } from "~/models/user.server";
+import { EU_TIMEZONES } from "./constants/EU_TIMEZONE";
+import { gdprConsent } from "./integrations/cookie";
+
+var timezone = require('dayjs/plugin/timezone')
+dayjs.extend(timezone);
 
 const DEFAULT_REDIRECT = "/";
 
@@ -68,4 +73,16 @@ export function useUser(): User {
 
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
+}
+
+export function isConcentRequired(): boolean {
+  return EU_TIMEZONES.includes(dayjs.tz.guess());
+}
+
+export async function shouldTrackUser(request: Request): Promise<boolean> {
+  if (!isConcentRequired()) return true;
+  const gdprCookieHeader = request.headers.get("cookie");
+  const gdprCookie = (await gdprConsent.parse(gdprCookieHeader)) || {};
+
+  return gdprCookie.gdprConsent;
 }
